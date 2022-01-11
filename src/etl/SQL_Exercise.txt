@@ -1,0 +1,33 @@
+--1.Write a SQL report that gives us the average salary for all employees
+select avg(salary) as Average_Salary from Employee;
+
+--2.Update previous query to give us the average salary for each company
+select avg(salary) as Average_Company_Salary from Employee group by companyid;
+
+
+--3.Debugging long running Query
+Here assuming oracle Database
+-If query is still running I will try to find the sql_id and status of session whether it is active or inactive from gv$session and based
+on the userid/client_identifier
+-Will try to see if recently any changes has happened on tables like earlier index is present on companyid but now dropped
+and also will check stats are up to date on the table if data in the table is modified.
+
+Will run the SQL tuning advisor for that sql_id and get the recommendation
+Based on the tuning advisor recommendation we have to take corrective actions. These recommendation could be and many more:
+
+Gather Statistics
+Create Index
+Drop Index
+Join orders
+Accept sql profile
+Sometime SQL tuning advisor does not recommend anything, in that case we have to go for a different approach.
+
+check if there is any change in the sql plan
+- look at v$sqlstats_plan_hash - it aggregates queries by their (sql_id and) execution plan, so if we get multiple plans for the same query
+ and one of them is good and one bad it helps to identify if bad plan is used.
+
+Many times, in a single server multiple databases are running. It may happen that one database is consuming more server resources than others.
+ So we will identify oracle process is consuming more resources and it is related to which database.
+  For this we use  TOP command. If we see there is CPU used by an oracle process is very high then we need to investigate further on who initiated etc.
+
+ --Since this query is select statement and not DML we will not be looking for any locks on the table
